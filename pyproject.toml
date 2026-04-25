@@ -1,0 +1,63 @@
+[build-system] 
+requires = [ "setuptools>=68", "wheel" ] 
+build_backend = "setuptools.build_meta"
+
+[project] 
+name = "comparative-rollingstdev-stft-psei" 
+version = "0.1.0" 
+description = " A study about the performance of Short-Time Fourier Transform (STFT) against Rolling Standard Deviation in terms of Volatility Regime Identification of The Philippine Stock Exchange Index (PSEI)" 
+readme = "README.md" 
+requires-python = ">=3.10" 
+license = { text = "MIT" } 
+authors = [ { name = "williamjames10231" } ]
+
+keywords = [ 
+    "math", 
+    "Volatility regime", 
+    "Rolling Standard Deviation",
+    "Short-Time Fourier Transform", 
+    "finance", 
+    "Confusion Matrix", 
+    "Cohen's Kappa", 
+    "agreeableness" 
+]
+
+dependencies = [ 
+    "numpy>=1.26", 
+    "pandas>=2.1", 
+    "jupyterlab>=4.0", 
+    "ipykernel>=6.0", 
+    "jupyter>=1.1.1", 
+    "scipy>=1.17.0",
+    "yfinance>=1.3.0",
+    "matplotlib>=3.10.9",
+]
+
+[project.optional-dependencies] 
+dev = [ 
+    "pytest>=7.4", 
+    "pytest-cov>=4.1", 
+    "black>=23.0", 
+    "ruff>=0.1", 
+    "mypy>=1.5", 
+    ] 
+
+[tool.setuptools.packages.find] 
+where = ["."] 
+include = [ 
+    "Comparative_engine*", 
+    "notebook*" 
+] 
+
+[tool.black] 
+line-length = 88 
+target-version = ["py310", "py311", "py312"] 
+
+[tool.ruff] 
+line-length = 88 
+select = ["E", "F", "W", "I"] 
+ignore = ["E501"] 
+
+[tool.pytest.ini_options] 
+testpaths = ["tests"] 
+addopts = "--cov=Comparative_engine --cov-report=term-missing"
