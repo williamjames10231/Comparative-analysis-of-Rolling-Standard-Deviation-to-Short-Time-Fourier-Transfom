@@ -3,13 +3,33 @@ import pandas as pd
 from scipy.signal import spectrogram
 
 class STFTEngine:
-    def __init__(self, given_data, window_size = 64):
+    def __init__(
+        self, 
+        given_data : pd.DataFrame, 
+        window_interval : int
+    ) -> None:
         self._fs = 1
-        self._nperseg = window_size
+        self._nperseg = window_interval
         self._noOverlap = self._nperseg - 1
         self._data = given_data
 
-    def run_engine(self):
+    @property
+    def window_interval(
+        self
+    ) -> int:
+        return self._nperseg
+    
+    @window_interval.setter
+    def window_interval(
+        self,
+        value : int 
+    ) -> None:
+        self._nperseg = value
+        self._noOverlap = self._nperseg - 1
+
+    def run_engine(
+        self
+    ) -> pd.Series:
         f,t, Sxx = spectrogram(
            self._data["Log Returns"],
             fs=self._fs,
