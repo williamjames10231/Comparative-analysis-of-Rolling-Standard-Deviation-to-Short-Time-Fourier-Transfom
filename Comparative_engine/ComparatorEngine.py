@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
+from scipy.stats import pearsonr
 
 from Comparative_engine.RollingSTDEVEngine import RollingSTDEVEngine
 from Comparative_engine.STFTEngine import STFTEngine
@@ -42,13 +43,24 @@ class ComparatorEngine:
         thresholds : tuple[list[float], list[float]] = self.volatility_threshold_maker(aggregate)
         self.volatility_regime_classifier(aggregate, thresholds[0], thresholds[1])
         self.normalize_aggregate(aggregate)
-
+        r_value, p_value = pearsonr(
+            aggregate["Rolling_STDEV_Normalized"],
+            aggregate["STFT_Normalized"])
         results_summary : dict[str, pd.DataFrame] = {
             "aggregate": aggregate,
             "thresholds": pd.DataFrame({
                 "STDEV": thresholds[0],
                 "STFT": thresholds[1]
-            }, index=["Low", "High"])
+            }, index=["Low", "High"]),
+            "confusion_matrix": confusion_matrix(
+                aggregate["STDEV_Regime"], 
+                aggregate["STFT_Regime"],
+                labels=["Low", "Medium", "High"]),
+            "cohen_kappa": cohen_kappa_score(   
+                aggregate["STDEV_Regime"], 
+                aggregate["STFT_Regime"]),
+            "pearson_correlation": r_value,
+            "pearson_p_value": p_value,
         }
 
         return results_summary
